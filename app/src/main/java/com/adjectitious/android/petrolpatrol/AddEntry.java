@@ -1,9 +1,6 @@
-package com.adjectitious.android.gastracker;
+package com.adjectitious.android.petrolpatrol;
 
-import android.app.Activity;
 import android.content.ContentValues;
-import android.database.Cursor;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +12,7 @@ import android.widget.Spinner;
 import android.database.sqlite.*;
 import android.widget.TextView;
 
-import com.adjectitious.android.gastracker.sql.*;
+import com.adjectitious.android.petrolpatrol.sql.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

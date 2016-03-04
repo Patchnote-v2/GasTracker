@@ -1,10 +1,6 @@
-package com.adjectitious.android.gastracker;
+package com.adjectitious.android.petrolpatrol;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -12,8 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -21,9 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
 
-import com.adjectitious.android.gastracker.sql.*;
-
-import java.lang.reflect.Field;
+import com.adjectitious.android.petrolpatrol.sql.*;
 
 /**
  * Created by Infernous on 2/27/2016.

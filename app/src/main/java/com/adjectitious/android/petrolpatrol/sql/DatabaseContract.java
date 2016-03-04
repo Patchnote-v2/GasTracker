@@ -1,4 +1,4 @@
-package com.adjectitious.android.gastracker.sql;
+package com.adjectitious.android.petrolpatrol.sql;
 
 import android.provider.BaseColumns;
 

@@ -1,4 +1,4 @@
-package com.adjectitious.android.gastracker;
+package com.adjectitious.android.petrolpatrol;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
