@@ -1,0 +1,49 @@
+<resources>
+    <!--
+        Main view
+    -->
+    <string name="app_name">Gas Tracker</string>
+    <string name="option_add_entry">Add Entry</string>
+    <string name="option_view_entries">View Entries</string>
+
+    <!--
+        Add entry
+    -->
+    <string name="text_date_error">Empty date</string>
+    <string name="text_name_error">Empty name</string>
+    <string name="text_price_error">Empty price</string>
+    <string name="text_gallons_error">Empty gallons</string>
+    <string name="text_mileage_error">Empty mileage</string>
+    <string name="text_date">Dates: </string>
+    <string name="text_name">Name: </string>
+    <string name="text_price">Price: </string>
+    <string name="text_gallons">Gallons: </string>
+    <string name="text_mileage">Mileage: </string>
+    <string name="add_entry_submit_button">Submit</string>
+    <string name="text_date_edit_checkbox_text">(auto)</string>
+    <string name="text_name_edit_checkbox_text">(custom)</string>
+    <string-array name="names_array">
+        <item>Arco</item>
+        <item>Arco SMB</item>
+        <item>Chevron</item>
+        <item>Costco</item>
+        <item>Exxon</item>
+        <item>Flying J</item>
+        <item>Love\'s</item>
+        <item>Mobil</item>
+        <item>Pilot</item>
+        <item>Shell</item>
+        <item>Sinclair</item>
+        <item>Valero</item>
+        <item>7-Eleven</item>
+    </string-array>
+
+    <!--
+        View Entries
+    -->
+    <string name="text_liquid_unit">gal</string>
+    <string name="text_distance_unit">mi</string>
+    <string name="button_delete_entry">Delete Entry</string>
+
+    <string name="text_newline">\n</string>
+</resources>
