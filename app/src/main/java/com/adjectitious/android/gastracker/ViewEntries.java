@@ -1,6 +1,7 @@
 package com.adjectitious.android.gastracker;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -70,17 +71,14 @@ public class ViewEntries extends AppCompatActivity {
                 null                                                // The sort order
         );
 
-        if (findViewById(R.id.list_subitem) != null)
-        {
-            LinearLayout temp = (LinearLayout) findViewById(R.id.list_subitem);
-            temp.removeAllViews();
-        }
         int color;
         LinearLayout list = (LinearLayout) findViewById(R.id.list);
+        list.removeAllViews();
         if (this.cursor.moveToFirst())
         {
             while (!this.cursor.isAfterLast())
             {
+                int current = cursor.getPosition();
                 LinearLayout layout = new LinearLayout(this.context);
                 layout.setId(R.id.list_subitem);
                 layout.setOrientation(LinearLayout.VERTICAL);
@@ -152,17 +150,7 @@ public class ViewEntries extends AppCompatActivity {
                 delete.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
                 delete.setTextColor(color);
                 delete.setText(getResources().getString(R.string.button_delete_entry));
-                delete.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        String where = DatabaseContract.gasTable._ID + "= ?";
-                        String[] values = new String[]{String.valueOf(cursor.getPosition())};
-                        db.delete(DatabaseContract.gasTable.TABLE_NAME, where, values);
-                        viewAll();
-                    }
-                });
+                delete.setOnClickListener(new DeleteOnClickListener(db, cursor.getPosition()));
                 layout.addView(delete);
             /*
             // TRIP
@@ -179,5 +167,26 @@ public class ViewEntries extends AppCompatActivity {
         }
 
         return;
+    }
+
+    private class DeleteOnClickListener implements View.OnClickListener
+    {
+        private SQLiteDatabase db;
+        private int position;
+
+        public DeleteOnClickListener(SQLiteDatabase db, int position)
+        {
+            this.db = db;
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View v)
+        {
+            String where = DatabaseContract.gasTable._ID + "= ?";
+            String[] values = new String[]{String.valueOf(position)};
+            db.delete(DatabaseContract.gasTable.TABLE_NAME, where, values);
+            viewAll();
+        }
     }
 }
