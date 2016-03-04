@@ -1,5 +1,10 @@
 package com.adjectitious.android.gastracker;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -8,21 +13,23 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
 
 import com.adjectitious.android.gastracker.sql.*;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by Infernous on 2/27/2016.
  */
-public class ViewEntries extends AppCompatActivity {
+public class ViewEntries extends AppCompatActivity
+{
     private static final String TAG = "ViewEntries";
     private Context context;
 
@@ -78,13 +85,14 @@ public class ViewEntries extends AppCompatActivity {
         {
             while (!this.cursor.isAfterLast())
             {
-                int current = cursor.getPosition();
                 LinearLayout layout = new LinearLayout(this.context);
                 layout.setId(R.id.list_subitem);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
                 layout.setLayoutParams(params);
                 layout.setPadding(0, 50, 0, 0);
+                layout.setLongClickable(true);
+                layout.setOnLongClickListener(new DeleteOnLongClickListener(this.cursor.getInt(this.cursor.getColumnIndex(DatabaseContract.gasTable._ID))));
 
                 list.addView(layout);
 
@@ -144,24 +152,6 @@ public class ViewEntries extends AppCompatActivity {
                 mileage.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_MILEAGE)));
                 layout.addView(mileage);
 
-                Button delete = new Button(this.context);
-                delete.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-                delete.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                delete.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
-                delete.setTextColor(color);
-                delete.setText(getResources().getString(R.string.button_delete_entry));
-                delete.setOnClickListener(new DeleteOnClickListener(db, cursor.getPosition()));
-                layout.addView(delete);
-            /*
-            // TRIP
-            TextView trip = new TextView(this.context);
-            trip.setLayoutParams(params);
-            trip.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            trip.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
-            trip.setText(cursor.getString(cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_NAME)));
-            layout.addView(trip);
-            */
-
                 this.cursor.moveToNext();
             }
         }
@@ -169,24 +159,68 @@ public class ViewEntries extends AppCompatActivity {
         return;
     }
 
-    private class DeleteOnClickListener implements View.OnClickListener
+    private class DeleteOnLongClickListener implements View.OnLongClickListener
     {
-        private SQLiteDatabase db;
-        private int position;
+        public DatabaseHelper dbHelper;
+        public SQLiteDatabase db;
+        public int position;
 
-        public DeleteOnClickListener(SQLiteDatabase db, int position)
+        public DeleteOnLongClickListener(int position)
         {
-            this.db = db;
+            this.dbHelper = new DatabaseHelper(getApplicationContext());
+            this.db = this.dbHelper.getWritableDatabase();
             this.position = position;
         }
 
         @Override
-        public void onClick(View v)
+        public boolean onLongClick(View v)
         {
-            String where = DatabaseContract.gasTable._ID + "= ?";
-            String[] values = new String[]{String.valueOf(position)};
-            db.delete(DatabaseContract.gasTable.TABLE_NAME, where, values);
-            viewAll();
+            AlertDialog dialog = new AlertDialog.Builder(ViewEntries.this).create();
+            dialog.setTitle(R.string.delete_entry_title);
+            dialog.setMessage(getString(R.string.delete_entry_prompt));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.confirm),
+                    new DialogTest(this.position)
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            String where = DatabaseContract.gasTable._ID + "= ?";
+                            String[] values = new String[]{String.valueOf(this.position)};
+                            db.delete(DatabaseContract.gasTable.TABLE_NAME, where, values);
+                            viewAll();
+                            Log.wtf(ViewEntries.TAG, String.valueOf(this.position));
+                        }
+                    });
+
+            dialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel),
+                    new DialogTest(this.position)
+                    {
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                        }
+                    });
+            dialog.show();
+            return true;
+        }
+
+        public class DialogTest implements DialogInterface.OnClickListener
+        {
+            public DatabaseHelper dbHelper;
+            public SQLiteDatabase db;
+            public int position;
+
+            public DialogTest(int position)
+            {
+                this.dbHelper = new DatabaseHelper(getApplicationContext());
+                this.db = this.dbHelper.getWritableDatabase();
+                this.position = position;
+            }
+
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+            }
         }
     }
 }
