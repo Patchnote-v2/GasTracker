@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -70,14 +71,28 @@ public class ViewEntries extends AppCompatActivity
                 null                                                // The sort order
         );
 
-        int color;
+        final int colorBlack;
+        final int colorGrayHighlight;
+        final int colorPrimaryBackground;
+        if (Build.VERSION.SDK_INT >= 23)
+        {
+            colorBlack = this.context.getColor(R.color.colorBlack);
+            colorGrayHighlight = this.context.getColor(R.color.colorGrayHighlight);
+            colorPrimaryBackground = this.context.getColor(R.color.colorPrimaryBackground);
+        }
+        else
+        {
+            colorBlack = getResources().getColor(R.color.colorBlack);
+            colorGrayHighlight = getResources().getColor(R.color.colorGrayHighlight);
+            colorPrimaryBackground = getResources().getColor(R.color.colorPrimaryBackground);
+        }
         LinearLayout list = (LinearLayout) findViewById(R.id.list);
         list.removeAllViews();
         if (this.cursor.moveToFirst())
         {
             while (!this.cursor.isAfterLast())
             {
-                LinearLayout layout = new LinearLayout(this.context);
+                final LinearLayout layout = new LinearLayout(this.context);
                 layout.setId(R.id.list_subitem);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -85,17 +100,25 @@ public class ViewEntries extends AppCompatActivity
                 layout.setPadding(0, 50, 0, 0);
                 layout.setLongClickable(true);
                 layout.setOnLongClickListener(new DeleteOnLongClickListener(this.cursor.getInt(this.cursor.getColumnIndex(DatabaseContract.gasTable._ID))));
+                layout.setOnTouchListener(new View.OnTouchListener()
+                {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event)
+                    {
+                        if (event.getAction() == MotionEvent.ACTION_DOWN)
+                        {
+                            layout.setBackgroundColor(colorGrayHighlight);
+                            return true;
+                        }
+                        else
+                        {
+                            layout.setBackgroundColor(colorPrimaryBackground);
+                            return true;
+                        }
+                    }
+                });
 
                 list.addView(layout);
-
-                if (Build.VERSION.SDK_INT >= 23)
-                {
-                    color = this.context.getColor(R.color.colorBlack);
-                }
-                else
-                {
-                    color = getResources().getColor(R.color.colorBlack);
-                }
 
                 // DATE
                 TextView date = new TextView(this.context);
@@ -103,7 +126,7 @@ public class ViewEntries extends AppCompatActivity
                 date.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 date.setTextSize(context.getResources().getDimension(R.dimen.header_font_size));
                 date.setTypeface(null, Typeface.BOLD);
-                date.setTextColor(color);
+                date.setTextColor(colorBlack);
                 date.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_DATE)));
                 date.setVisibility(View.VISIBLE);
                 layout.addView(date);
@@ -113,7 +136,7 @@ public class ViewEntries extends AppCompatActivity
                 location.setLayoutParams(params);
                 location.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 location.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
-                location.setTextColor(color);
+                location.setTextColor(colorBlack);
                 location.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_NAME)));
                 layout.addView(location);
 
@@ -122,7 +145,7 @@ public class ViewEntries extends AppCompatActivity
                 price.setLayoutParams(params);
                 price.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 price.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
-                price.setTextColor(color);
+                price.setTextColor(colorBlack);
                 price.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_PRICE)));
                 layout.addView(price);
 
@@ -131,7 +154,7 @@ public class ViewEntries extends AppCompatActivity
                 gallons.setLayoutParams(params);
                 gallons.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 gallons.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
-                gallons.setTextColor(color);
+                gallons.setTextColor(colorBlack);
                 gallons.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_GALLONS)));
                 layout.addView(gallons);
 
@@ -140,7 +163,7 @@ public class ViewEntries extends AppCompatActivity
                 mileage.setLayoutParams(params);
                 mileage.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 mileage.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
-                mileage.setTextColor(color);
+                mileage.setTextColor(colorBlack);
                 mileage.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_MILEAGE)));
                 layout.addView(mileage);
 
