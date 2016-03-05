@@ -8,6 +8,10 @@
     <dimen name="option_font_size">8pt</dimen>
 
     <!--
+        Add entry-->
+    <dimen name="checkmark_side">100px</dimen>
+
+    <!--
         View entries-->
     <dimen name="list_top_padding">50px</dimen>
     <dimen name="header_font_size">4pt</dimen>

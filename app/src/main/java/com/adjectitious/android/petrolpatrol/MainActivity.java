@@ -5,6 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+// TODO: Graphs and other statistics
+// TODO: Multiple cars
+// TODO: Help menu (single or per-view?)
+// TODO: Nicer looking buttons (bigger, evenly split across view
 public class MainActivity extends AppCompatActivity
 {
 

@@ -18,9 +18,13 @@ import android.view.ViewGroup.LayoutParams;
 
 import com.adjectitious.android.petrolpatrol.sql.*;
 
-/**
- * Created by Infernous on 2/27/2016.
- */
+import java.text.DecimalFormat;
+
+// TODO: Add option to add entry (or am using tab system?)
+// TODO: Implement pagination to prevent too long a list
+// TODO: Implement sorting view calender
+// TODO: Implement sorting via different stats
+// TODO: Change display to table (might be too narrow, at least make it look nice)
 public class ViewEntries extends AppCompatActivity
 {
     private static final String TAG = "ViewEntries";
@@ -39,12 +43,6 @@ public class ViewEntries extends AppCompatActivity
         setContentView(R.layout.activity_view_entries);
         this.context = getApplicationContext();
         viewAll();
-    }
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
     }
 
     @Override
@@ -146,7 +144,10 @@ public class ViewEntries extends AppCompatActivity
                 price.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 price.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
                 price.setTextColor(colorBlack);
-                price.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_PRICE)));
+                price.setText(
+                        new DecimalFormat("#,###.##").format(
+                            this.cursor.getDouble(
+                                this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_PRICE))));
                 layout.addView(price);
 
                 // GALLONS
@@ -155,8 +156,12 @@ public class ViewEntries extends AppCompatActivity
                 gallons.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 gallons.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
                 gallons.setTextColor(colorBlack);
-                gallons.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_GALLONS)));
+                gallons.setText(
+                        new DecimalFormat("#,###.###").format(
+                            this.cursor.getDouble(
+                                this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_GALLONS))));
                 layout.addView(gallons);
+
 
                 // MILEAGE
                 TextView mileage = new TextView(this.context);
@@ -164,7 +169,10 @@ public class ViewEntries extends AppCompatActivity
                 mileage.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 mileage.setTextSize(context.getResources().getDimension(R.dimen.subitems_font_size));
                 mileage.setTextColor(colorBlack);
-                mileage.setText(this.cursor.getString(this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_MILEAGE)));
+                mileage.setText(
+                        new DecimalFormat("#,###").format(
+                            this.cursor.getDouble(
+                                this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_MILEAGE))));
                 layout.addView(mileage);
 
                 this.cursor.moveToNext();
@@ -190,6 +198,7 @@ public class ViewEntries extends AppCompatActivity
         @Override
         public boolean onLongClick(View v)
         {
+            // TODO: Add an edit option
             AlertDialog dialog = new AlertDialog.Builder(ViewEntries.this).create();
             dialog.setTitle(R.string.delete_entry_title);
             dialog.setMessage(getString(R.string.delete_entry_prompt));

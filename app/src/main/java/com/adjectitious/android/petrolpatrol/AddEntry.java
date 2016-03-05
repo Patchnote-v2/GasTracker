@@ -4,13 +4,17 @@ import android.content.ContentValues;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.database.sqlite.*;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adjectitious.android.petrolpatrol.sql.*;
 
@@ -18,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+// TODO: Add option to see entries (or am using tab system?)
+// TODO: Implement max limit?  Or some performance control
 public class AddEntry extends AppCompatActivity
 {
 
@@ -42,6 +48,55 @@ public class AddEntry extends AppCompatActivity
 
     public boolean addEntry(EditText date, EditText name, EditText price, EditText gallons, EditText mileage)
     {
+        String dateString = date.getText().toString();
+        String nameString = name.getText().toString();
+        String priceString = price.getText().toString();
+        String gallonsString = gallons.getText().toString();
+        String mileageString = mileage.getText().toString();
+
+        TextView errorText = (TextView) findViewById(R.id.text_fields_errors);
+        errorText.setVisibility(View.VISIBLE);
+        errorText.setText("");
+
+        boolean emptyField = false;
+
+        if (dateString == null || dateString.isEmpty())
+        {
+            emptyField = true;
+            errorText.append(getString(R.string.text_date_error));
+            errorText.append(getString(R.string.text_newline));
+        }
+        if (nameString == null || nameString.isEmpty())
+        {
+            emptyField = true;
+            errorText.append(getString(R.string.text_name_error));
+            errorText.append(getString(R.string.text_newline));
+        }
+        if (priceString == null || priceString.isEmpty())
+        {
+            emptyField = true;
+            errorText.append(getString(R.string.text_price_error));
+            errorText.append(getString(R.string.text_newline));
+        }
+        if (gallonsString == null || gallonsString.isEmpty())
+        {
+            emptyField = true;
+            errorText.append(getString(R.string.text_gallons_error));
+            errorText.append(getString(R.string.text_newline));
+        }
+        if (mileageString == null || mileageString.isEmpty())
+        {
+            emptyField = true;
+            errorText.append(getString(R.string.text_mileage_error));
+            errorText.append(getString(R.string.text_newline));
+        }
+
+        if (emptyField == true)
+        {
+            errorText.setVisibility(View.VISIBLE);
+            return false;
+        }
+
         // Create new helper
         DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
 
@@ -50,11 +105,11 @@ public class AddEntry extends AppCompatActivity
 
         // Create insert entries
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.gasTable.COLUMN_NAME_DATE, date.getText().toString());
-        values.put(DatabaseContract.gasTable.COLUMN_NAME_NAME, name.getText().toString());
-        values.put(DatabaseContract.gasTable.COLUMN_NAME_PRICE, Float.parseFloat(price.getText().toString()));
-        values.put(DatabaseContract.gasTable.COLUMN_NAME_GALLONS, Float.parseFloat(gallons.getText().toString()));
-        values.put(DatabaseContract.gasTable.COLUMN_NAME_MILEAGE, Integer.parseInt(mileage.getText().toString()));
+        values.put(DatabaseContract.gasTable.COLUMN_NAME_DATE, dateString);
+        values.put(DatabaseContract.gasTable.COLUMN_NAME_NAME, nameString);
+        values.put(DatabaseContract.gasTable.COLUMN_NAME_PRICE, priceString);
+        values.put(DatabaseContract.gasTable.COLUMN_NAME_GALLONS, gallonsString);
+        values.put(DatabaseContract.gasTable.COLUMN_NAME_MILEAGE, mileageString);
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId;
@@ -62,6 +117,7 @@ public class AddEntry extends AppCompatActivity
                 DatabaseContract.gasTable.TABLE_NAME,
                 null,
                 values);
+
         return true;
     }
 
@@ -74,7 +130,6 @@ public class AddEntry extends AppCompatActivity
         String mileageString = mileage.getText().toString();
 
         TextView errorText = (TextView) findViewById(R.id.text_fields_errors);
-        errorText.setVisibility(View.VISIBLE);
         errorText.setText("");
 
         boolean emptyField = false;
@@ -153,16 +208,38 @@ public class AddEntry extends AppCompatActivity
 
         if (nameEditText.isShown())
         {
-            addEntry(date, nameEditText, price, gallons, mileage);
+            if (addEntry(date, nameEditText, price, gallons, mileage))
+            {
+                displayToast();
+                resetValues();
+            }
         }
         else if (nameSpinner.isShown())
         {
-            addEntry(date, nameSpinner, price, gallons, mileage);
+            if (addEntry(date, nameSpinner, price, gallons, mileage))
+            {
+                displayToast();
+                resetValues();
+            }
         }
         else
         {
             Log.wtf(TAG, "Neither name EditText or Spinner is visible.\nNow just how the heck did you manage to do that?");
         }
+    }
+
+    private void resetValues()
+    {
+        EditText date = (EditText) findViewById(R.id.text_date_edit);
+        date.setText("");
+        EditText name = (EditText) findViewById(R.id.text_name_edit);
+        name.setText("");
+        EditText price = (EditText) findViewById(R.id.text_price_edit);
+        price.setText("");
+        EditText gallons = (EditText) findViewById(R.id.text_gallons_edit);
+        gallons.setText("");
+        EditText mileage = (EditText) findViewById(R.id.text_mileage_edit);
+        mileage.setText("");
     }
 
     /*
@@ -207,6 +284,16 @@ public class AddEntry extends AppCompatActivity
                 }
         }
 
+    }
+
+    public void displayToast()
+    {
+        Toast toast = new Toast(getApplicationContext());
+        toast.setView(getLayoutInflater().inflate(R.layout.toast, (ViewGroup) findViewById(R.id.toast_submit)));
+        toast.makeText(this, getString(R.string.toast_submit_message), Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.BOTTOM, 0, 200);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.show();
     }
 
     /*
