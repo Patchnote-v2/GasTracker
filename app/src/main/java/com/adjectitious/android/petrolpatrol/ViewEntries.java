@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +42,8 @@ public class ViewEntries extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_entries);
+        Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mainToolbar);
         this.context = getApplicationContext();
         viewAll();
     }
@@ -74,15 +77,15 @@ public class ViewEntries extends AppCompatActivity
         final int colorPrimaryBackground;
         if (Build.VERSION.SDK_INT >= 23)
         {
-            colorBlack = this.context.getColor(R.color.colorBlack);
-            colorGrayHighlight = this.context.getColor(R.color.colorGrayHighlight);
-            colorPrimaryBackground = this.context.getColor(R.color.colorPrimaryBackground);
+            colorBlack = this.context.getColor(R.color.black);
+            colorGrayHighlight = this.context.getColor(R.color.grayHighlight);
+            colorPrimaryBackground = this.context.getColor(R.color.primaryBackground);
         }
         else
         {
-            colorBlack = getResources().getColor(R.color.colorBlack);
-            colorGrayHighlight = getResources().getColor(R.color.colorGrayHighlight);
-            colorPrimaryBackground = getResources().getColor(R.color.colorPrimaryBackground);
+            colorBlack = getResources().getColor(R.color.black);
+            colorGrayHighlight = getResources().getColor(R.color.grayHighlight);
+            colorPrimaryBackground = getResources().getColor(R.color.primaryBackground);
         }
         LinearLayout list = (LinearLayout) findViewById(R.id.list);
         list.removeAllViews();
@@ -147,7 +150,7 @@ public class ViewEntries extends AppCompatActivity
                 price.setText(
                         new DecimalFormat("#,###.##").format(
                             this.cursor.getDouble(
-                                this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_PRICE))));
+                                    this.cursor.getColumnIndex(DatabaseContract.gasTable.COLUMN_NAME_PRICE))));
                 layout.addView(price);
 
                 // GALLONS

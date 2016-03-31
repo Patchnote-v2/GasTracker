@@ -3,6 +3,7 @@ package com.adjectitious.android.petrolpatrol;
 import android.content.ContentValues;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +35,8 @@ public class AddEntry extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_entry);
+        Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mainToolbar);
 
         // Autofills date by default
         View dateCheckboxView = findViewById(R.id.text_date_edit_checkbox);

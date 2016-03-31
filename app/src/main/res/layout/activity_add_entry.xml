@@ -10,6 +10,10 @@
     tools:context="com.adjectitious.android.petrolpatrol.AddEntry"
     android:orientation="vertical">
 
+    <include
+        android:layout="@layout/main_toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"/>
+
     <TextView android:id="@+id/text_fields_errors"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"

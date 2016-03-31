@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -10,18 +11,28 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
+    <include
+        android:layout="@layout/main_toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"/>
+
     <Button android:id="@+id/option_add_entry"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/buttonAddEntry"
             android:textSize="@dimen/option_font_size"
             android:text="@string/option_add_entry"
-            android:onClick="addEntry" />
+            android:onClick="addEntry"
+            style="?android:attr/borderlessButtonStyle" />
 
     <Button android:id="@+id/option_view_entries"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/buttonViewEntry"
             android:textSize="@dimen/option_font_size"
             android:text="@string/option_view_entries"
-            android:onClick="viewEntries" />
+            android:onClick="viewEntries"
+            style="?android:attr/borderlessButtonStyle"/>
 
 </LinearLayout>
